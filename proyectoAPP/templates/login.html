@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+    <title>Login</title>
+        <style>
+        #message-container {
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1050; 
+            padding-top: 10px; 
+            padding-bottom: 0;
+            text-align: center; 
+        }
+        #message-container .alert {
+            /* Centrar la caja de alerta si no ocupa todo el ancho */
+            display: inline-block;
+            /* Un poco de sombra para destacarse */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            /* Redondeo sutil */
+            border-radius: 8px; 
+            /* Margen inferior para separarlo un poco de la barra de navegación */
+            margin-bottom: 5px; 
+        }
+        </style>
+</head>
+
+<body class="login-body">
+    <div class="login-card">
+        <h3>Iniciar Sesión</h3>
+        <div id="message-container"> 
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>    
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="usuario" class="form-label">Usuario</label>
+                <input id="usuario" type="text" class="form-control" name="usuario" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input id="password" type="password" class="form-control" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-black btn-full">
+                Iniciar Sesion
+            </button>
+        </form>
+    </div>
+
+    <!-- JS --><script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // 1. Identificamos el contenedor donde están los mensajes
+    const messageContainer = document.getElementById('message-container');
+
+    // Verificamos si hay mensajes dentro del contenedor
+    if (messageContainer && messageContainer.children.length > 0) {
+        // Establecemos la duración en milisegundos (ej: 4000 ms = 4 segundos)
+        const duration = 4000; 
+
+        // 2. Usamos setTimeout para programar la eliminación de los mensajes
+        setTimeout(function() {
+            // Seleccionamos todas las alertas de Bootstrap
+            const messages = messageContainer.querySelectorAll('.alert');
+            
+            // Recorremos cada alerta y la eliminamos del DOM
+            messages.forEach(alertDiv => {
+                alertDiv.remove();
+            });
+            
+            // Opcional: Aseguramos que el contenedor esté completamente vacío
+            messageContainer.innerHTML = ''; 
+        }, duration); // 'duration' es el tiempo de espera
+    }
+    
+    // ... el resto de tu código de JavaScript (descarga de PDF, etc.) iría aquí ...
+});
+</script>
+
+</body>
+</html>

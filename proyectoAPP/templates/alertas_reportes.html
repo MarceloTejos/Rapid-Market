@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Alertas y Reportes - RapidMarket</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .panel { background:#fff; border-radius:10px; padding:18px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+    .flex { display:flex; gap:16px; align-items:flex-start; }
+    .left { flex: 1 1 50%; }
+    .right { flex: 1 1 50%; }
+    .alert-item { padding:10px; border-radius:8px; margin-bottom:8px; background:#fff9e6; border:1px solid #ffe8a6; }
+    .rec-item { padding:10px; border-radius:8px; margin-bottom:8px; background:#e9f7ef; border:1px solid #bfeecf; }
+    .small-muted { font-size:12px; color:#666; }
+  </style>
+</head>
+<body>
+      <div class="sidebar">
+        <div class="asd">
+            <h3>Opciones Administrador</h3>
+            <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+            <a class="nav-link" href="{% url 'realizar_venta' %}">Registrar Ventas</a>
+            {% if request.session.usuario_rol == "admin" %}
+                <a class="nav-link" href="{% url 'registro' %}">Registrar Usuarios</a></li>
+                <a class="nav-link" href="{% url 'gproductos' %}">Administrar Productos</a></li>
+                <a class="nav-link" href="{% url 'alertas_reportes' %}">Reportes</a>
+            {% endif %}  
+        </div>
+    </div>
+  <div class="content" style="padding:2rem;">
+    <h2>Alertas y Reportes</h2>
+    <div class="panel flex" id="main-panel">
+      <div class="left">
+        <h4>Alertas</h4>
+        <div id="alertas-list">
+        </div>
+        <h5 class="mt-3">Recomendaciones IA</h5>
+        <div id="recomendaciones-list"></div>
+      </div>
+
+      <div class="right">
+        <h4>Reportes / Ventas (últimos meses)</h4>
+        <canvas id="chartVentas" height="220"></canvas>
+        <div class="mt-3">
+          <h5>KPIs rápidos</h5>
+          <div id="kpis">
+            <div><b>Ventas totales (periodo):</b> <span id="kpi_ventas">-</span></div>
+            <div><b>Quiebres de stock (estimado):</b> <span id="kpi_quiebres">-</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+async function fetchAlertas(){
+  const res = await fetch("{% url 'alertas_api' %}");
+  const data = await res.json();
+
+  const alertsDiv = document.getElementById('alertas-list');
+  alertsDiv.innerHTML = '';
+  data.dinamicas_bajo_stock.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'alert-item';
+    el.innerHTML = `<b>${a.producto}</b><div class="small-muted">${a.mensaje}</div>`;
+    alertsDiv.appendChild(el);
+  });
+
+  if(data.guardadas.length){
+    const title = document.createElement('h6'); title.textContent = 'Alertas guardadas'; alertsDiv.appendChild(title);
+    data.guardadas.forEach(a => {
+      const el = document.createElement('div');
+      el.className = 'alert-item';
+      el.innerHTML = `<b>${a.producto}</b> <span class="small-muted">[${a.tipo}] - ${a.fecha}</span><div>${a.mensaje}</div>`;
+      alertsDiv.appendChild(el);
+    });
+  }
+
+  const recDiv = document.getElementById('recomendaciones-list');
+  recDiv.innerHTML = '';
+  data.recomendaciones_ia.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'rec-item';
+    el.innerHTML = `<b>${r.producto}</b><div class="small-muted">Esperado (monto): $${r.esperado_monto} — Stock actual: ${r.stock_actual}</div><div>${r.mensaje}</div>`;
+    recDiv.appendChild(el);
+  });
+}
+
+async function fetchReportes(){
+  const res = await fetch("{% url 'reportes_api' %}");
+  const j = await res.json();
+  const series = j.series || [];
+
+  const labels = series.map(s => s.month);
+  const values = series.map(s => s.total);
+
+  const ctx = document.getElementById('chartVentas').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ventas (monto)',
+        data: values,
+        borderRadius: 6,
+        barThickness: 26
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display:false } },
+      scales: { y: { beginAtZero:true } }
+    }
+  });
+
+
+  const total = values.reduce((a,b)=>a+b,0).toFixed(2);
+  document.getElementById('kpi_ventas').innerText = `$${total}`;
+  document.getElementById('kpi_quiebres').innerText = 'Ver alertas';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  fetchAlertas();
+  fetchReportes();
+
+  setInterval(fetchAlertas, 60000);
+});
+</script>
+</body>
+</html>

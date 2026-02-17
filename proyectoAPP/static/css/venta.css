@@ -1,0 +1,106 @@
+/* Agrega este nuevo bloque de CSS */
+#message-container {
+    /* 1. Saca el elemento del flujo y lo fija a la ventana */
+    position: fixed; 
+    
+    /* 2. Posicionarlo en la parte superior */
+    top: 0; 
+    
+    /* 3. Estirarlo a todo el ancho de la pantalla */
+    left: 0;
+    right: 0;
+    width: 100%;
+    
+    /* 4. Asegurar que esté por encima de todos los demás elementos (navbar) */
+    z-index: 1050; 
+    
+    /* 5. Añadir un poco de padding o margen para que se vea mejor */
+    padding-top: 10px; 
+    padding-bottom: 0;
+    
+    /* 6. Asegurar que el texto esté centrado si hay solo un mensaje */
+    text-align: center; 
+}
+
+/* Opcional, mejora la apariencia del mensaje dentro del contenedor fijo */
+#message-container .alert {
+    /* Centrar la caja de alerta si no ocupa todo el ancho */
+    display: inline-block;
+    /* Un poco de sombra para destacarse */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    /* Redondeo sutil */
+    border-radius: 8px; 
+    /* Margen inferior para separarlo un poco de la barra de navegación */
+    margin-bottom: 5px; 
+}
+
+.form-venta{
+    align-items: center;
+    justify-content: center;  
+}
+
+.row-venta {
+    display: flex;
+    justify-content: center;       
+    align-items: center;
+    gap: 25px;                      
+    flex-wrap: wrap;
+}
+
+.row-venta .item {
+    display: flex;
+    flex-direction: column;
+    width: 440px;
+}
+
+
+.btn-full {
+    width: 100%;
+    background-color: green;
+}
+
+
+.venta-table th {
+    background: black !important;
+    color: white !important;
+    text-align: center;
+}
+
+.venta-table td {
+    text-align: center;
+}
+
+
+.total-box  {
+    width: 100%;
+    background: #5c5c5c;
+    color: #fff;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+
+.venta-wrapper  {
+    display: flex;
+    justify-content: center;      
+    align-items: center;          
+    min-height: 100vh;            
+    padding: 20px;
+    background: #f4f4f4;         
+}
+
+.venta-box  {
+    width: 50%;
+    text-align: center;
+    background: #fff;
+    padding: 90px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.titulo1 {
+    text-align: center;
+    padding: 10px;
+}
+

@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/venta.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+    <title>Inicio</title>
+    <style>
+
+    .navbar .menu li a {
+        color: #fff;
+        font-weight: 500;
+        transition: color 0.3s ease;
+
+        text-decoration: none; 
+    }
+
+
+    .navbar .brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: #fff;
+        text-decoration: none; 
+    }
+        #message-container {
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1050; 
+            padding-top: 10px; 
+            padding-bottom: 0;
+            text-align: center; 
+        }
+        #message-container .alert {
+            /* Centrar la caja de alerta si no ocupa todo el ancho */
+            display: inline-block;
+            /* Un poco de sombra para destacarse */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            /* Redondeo sutil */
+            border-radius: 8px; 
+            /* Margen inferior para separarlo un poco de la barra de navegación */
+            margin-bottom: 5px; 
+        }
+        .funciones {
+            position: relative;
+            padding: 4rem 2rem;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .funciones-bg {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 100%;
+            height: 90%;
+            background-image: url('');
+            background-size:cover;
+            background-position: center;
+            opacity: 0.50; 
+            z-index: -1;   
+            filter: blur(1px); 
+        }
+        .footer-logo{
+            width: 200px;
+            height: 130px;
+        }
+        .footer-columns {
+            width: 100%;
+            padding: 20px 10%;
+            background-color: #000;
+            color: #eee;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+                .footer-box h5, 
+        .footer-box h6 {
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .footer-box a {
+            display: block;
+            color: #000000;
+            margin-bottom: 6px;
+        }
+
+        .footer-box a:hover {
+            color: #000000;
+        }
+
+        .footer-box p {
+            margin: 4px 0;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="message-container"> 
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% else %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>    
+    <nav class="navbar">
+        <a href="#" class="brand" style="padding-left: 20px ;">Rapid Market</a>
+        <ul class="menu">
+            <li><a href="{% url 'inicio' %}">Inicio</a></li>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+
+            {% if usuario_nombre %}
+                <!-- OPCIONES SOLO PARA ADMIN -->
+                {% if request.session.usuario_rol == "admin" %}
+                    <li><a href="{% url 'registro' %}">Registrar Usuarios</a></li>
+                    <li><a href="{% url 'gproductos' %}">Administrar Productos</a></li>
+                {% endif %}
+                <!-- OPCIONES SOLO PARA CAJERO -->
+                {% if request.session.usuario_rol == "cajero" or "admin" %}
+                    <li><a href="{% url 'realizar_venta' %}">Registrar Ventas</a></li>
+                {% endif %} 
+                <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>            
+            {% else %}
+                <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <br><br>
+    <section class="hero" id="inicio">
+        <img src="/static/img/market1.png" class="active" alt="Portada 1">
+        <img src="/static/img/market2.png" alt="Portada 2">
+        <img src="/static/img/market3.png" alt="Portada 3">
+
+        <div class="hero-text">
+            <h1>Market</h1>
+            <p>Automatiza tus ventas, controla inventario y te sugiere productos para ofrecer según la demanda del mes.</p><br>
+            <a href="{% url 'login' %}" class="btn btn-black mt-3">Ingresar</a>
+        </div>
+    </section>
+
+    <section id="acerca" class="acerca">
+        <div class="container text-center">
+            <h2>Sobre el Proyecto</h2>
+            <p>
+                El sistema integra un módulo de inteligencia de negocios que analiza las ventas mensuales y sugiere reposiciones o promociones según patrones de consumo anteriores.
+            </p>
+        </div>
+    </section>
+
+    <section class="funciones" id="funciones">
+        
+        <div class="funciones-bg"></div>
+
+        <h2 class="text-center mb-4">Funciones Principales</h2>
+
+        <div class="iconos">
+            <div class="icono">
+                <i class="fas fa-cash-register"></i>
+                <h4>Ventas rápidas</h4>
+                <p>Registra las ventas diarias con un flujo ágil y simple.</p>
+            </div>
+            <div class="icono">
+                <i class="fas fa-boxes"></i>
+                <h4>Gestión de inventario</h4>
+                <p>Control total sobre productos, stock y fechas de vencimiento.</p>
+            </div>
+            <div class="icono">
+                <i class="fas fa-chart-line"></i>
+                <h4>Inteligencia de negocios</h4>
+                <p>Visualiza patrones de ventas y recibe alertas predictivas.</p>
+            </div>
+            <div class="icono">
+                <i class="fas fa-users-cog"></i>
+                <h4>Gestión de usuarios</h4>
+                <p>Permite roles diferenciados: administrador y vendedor.</p>
+            </div>
+        </div>
+    </section>
+
+<footer class="footer-columns" style="background-color: rgb(204, 112, 75);" id="contacto">
+    <div class="footer-box">
+        <h3 style="color: black; font-family:'Times New Roman', Times, serif":>RapidMarket</h3>
+        <p>Sistema para control de inventario, ventas y reportes.</p>
+    </div>
+    <div class="footer-logo">
+        <img src="static/img/Logo.png" class="footer-logo">
+    </div>
+    <div class="footer-box">
+        <h6>Soporte</h6>
+        <p>Email: soporte@rapidmarket.cl</p>
+        <p>Tel: +56 9 1234 5678</p>
+    </div>
+</footer>
+
+    <script>
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const messageContainer = document.getElementById('message-container');
+        
+        // Verifica si el contenedor existe y tiene mensajes dentro
+        if (messageContainer && messageContainer.children.length > 0) {
+            
+            // Define el tiempo de espera en milisegundos (4 segundos)
+            const duration = 4000; 
+
+            setTimeout(function() {
+                // Selecciona todos los mensajes de alerta dentro del contenedor
+                const messages = messageContainer.querySelectorAll('.alert');
+                
+                messages.forEach(alertDiv => {
+                    // Elimina el mensaje del DOM
+                    alertDiv.remove();
+                });
+                
+                // Limpia el contenedor padre
+                messageContainer.innerHTML = '';
+                
+            }, duration);
+        }
+    });
+        const slides = document.querySelectorAll(".hero img");
+        let index = 0;
+        function showSlide() {
+            slides.forEach((slide, i) => {
+                slide.classList.remove("active");
+                if (i === index) slide.classList.add("active");
+            });
+            index = (index + 1) % slides.length;
+        }
+        setInterval(showSlide, 4000);
+    </script>
+</body>
+</html>
