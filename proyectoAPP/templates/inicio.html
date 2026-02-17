@@ -124,11 +124,11 @@
             <li><a href="{% url 'inicio' %}">Inicio</a></li>
             <li><a href="#funciones">Funciones</a></li>
             <li><a href="#contacto">Contacto</a></li>
-
+            <li><a href="{% url 'registro' %}">Registrar Usuarios</a></li>
             {% if usuario_nombre %}
                 <!-- OPCIONES SOLO PARA ADMIN -->
                 {% if request.session.usuario_rol == "admin" %}
-                    <li><a href="{% url 'registro' %}">Registrar Usuarios</a></li>
+
                     <li><a href="{% url 'gproductos' %}">Administrar Productos</a></li>
                 {% endif %}
                 <!-- OPCIONES SOLO PARA CAJERO -->
