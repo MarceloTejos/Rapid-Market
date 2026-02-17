@@ -75,8 +75,7 @@ def rol_requerido(*roles_permitidos):
         return wrapper
     return decorador
 
-@login_requerido
-@rol_requerido('admin')
+
 def registro_usuario(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
